@@ -13,4 +13,5 @@ taiga/core/taxonomy.py
 taiga_bio.egg-info/PKG-INFO
 taiga_bio.egg-info/SOURCES.txt
 taiga_bio.egg-info/dependency_links.txt
+taiga_bio.egg-info/requires.txt
 taiga_bio.egg-info/top_level.txt
