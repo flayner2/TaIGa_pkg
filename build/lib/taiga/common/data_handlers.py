@@ -73,11 +73,11 @@ def create_df(taxon_list: List) -> pd.DataFrame:
     return frame
 
 
-def create_output(output_path: str, frame: pd.DataFrame, taxon_list: List) -> None:
+def create_output(outdir: str, frame: pd.DataFrame, taxon_list: List) -> None:
     """Creates the output directories (if they don't exist) and files for TaIGa
 
     Parameters:
-    output_path (string): The path to the output folder as a string. It doesn't need to exist
+    outdir (string): The path to the output folder as a string. It doesn't need to exist
     frame (DataFrame): The DataFrame containing all the information for all Taxa
     taxon_list (list): A list of Taxa objects used to create the file with the missing information
 
@@ -86,6 +86,11 @@ def create_output(output_path: str, frame: pd.DataFrame, taxon_list: List) -> No
 
     """
     log.info("\n> Checking if output folder exists")
+
+    if outdir[-1] == "/":
+        output_path = outdir
+    else:  # Adding a trailing forward slash to the output path if needed
+        output_path = outdir + "/"
 
     if not os.path.exists(output_path):
         log.info("\n> Creating output folder")
@@ -129,3 +134,6 @@ def create_output(output_path: str, frame: pd.DataFrame, taxon_list: List) -> No
                     missing_file.write(f"\t{taxon.name}\n")
                 else:
                     missing_file.write(f"\t{taxon.taxon_id}\n")
+
+    log.info(
+        "\n> TaIGa was run successfully! You can check the results inside the output folder\n")
