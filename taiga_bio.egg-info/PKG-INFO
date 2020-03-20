@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: taiga-bio
-Version: 1.0.1
+Version: 1.0.2
 Summary: Set of tools to fetch taxonomic metadata for a list of organisms
 Home-page: https://github.com/flayner2/taiga-bio
 Author: Maycon Oliveira
