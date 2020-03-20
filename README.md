@@ -10,20 +10,24 @@ From a Python script of your choice (must be `>=Python 3.6`), do:
 
 ```python
 from taiga.core import taxonomy
+from taiga.common import data_handlers
 
-taxonomy.run_taiga(input_file, output_directory, email)
+frame, taxon_list = taxonomy.run_taiga(input_file, output_directory, email)
+data_handlers.create_output(ouput_directory, frame, taxon_list)
 
 ```
 
 This will run TaIGa's main function, which grabs a list of names from `input_file`, fetches for their taxonomic
 information on [NCBI's Taxonomy](https://www.ncbi.nlm.nih.gov/taxonomy), which needs your `email` as a good practice,
-and outputs the results to the specified `output_directory`, which need not to be pre-created.
+and returns a DataFrame and a list of Taxon objects. Then, it outputs the results to the specified `output_directory`,
+which need not to be pre-created, using the returned DataFrame and list.
 
 ## 2 Arguments
 
 ```python
 
-run_taiga(infile, outdir, email, gb_mode=0, tid=False, correction=False, retries=5, silent=False)
+run_taiga(infile, outdir, email, gb_mode=0, tid=False, correction=False, retries=5, silent=False) -> Tuple[DataFrame, 
+                                                                                                           List]
 
 ```
 
@@ -34,11 +38,6 @@ list of organism names separated by line in a text-like file (`.txt`). You can c
 separated text file with a collection of Taxon IDs; a Genbank format file with multiple records, all from the same organism; 
 a Genbank format file with only one record; or a Genbank format file with multiple records from multiple organisms. Organism names 
 refer to any valid taxonomic level that is available on NCBI's Taxonomy database.
-
-**[output path]**: This is the full path to the output folder. This is where TaIGa will automatically create the output file, 
-discussed below, and the missing file (also discussed below) if there is need for one. This folder must be a valid path on your 
-system, but it doesn't need to be pre-created. TaIGa will check if the folder exists and, if it doesn't, it creates it at the 
-provided path.
 
 **[user e-mail]**: This is just a valid e-mail of yours. Nothing will be sent to this e-mail, and neither TaIGa itself neither me 
 will ever use it for anything other than running TaIGa (in fact, I will never have access to this information. You may check the 
@@ -71,6 +70,21 @@ organism. This can be very useful as Entrez will many times return broken respon
 the current working directory. This log file will contain all information about that particular TaIGa run.
 
 ## 3 Output files
+
+To create the output files, run the following:
+
+```python
+from taiga.core import data_handlers
+
+data_handlers.create_output(ouput_directory, frame, taxon_list)
+
+```
+
+The arguments are:
+
+- **[output directory]**: a string containing the path to the output directory, which doesn't need to be created yet.
+- **[frame]**: the DataFrame returned by `taiga.core.taxonomy.run_taiga()`.
+- **[taxon_list]**: the list of Taxon objects returned by `taiga.core.taxonomy.run_taiga()`.
 
 ### 3.1 TaIGa_result.csv
 

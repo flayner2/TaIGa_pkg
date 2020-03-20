@@ -1,21 +1,21 @@
 import sys
 import logging as log
 from ..common import parsers, helpers, retrievers, data_handlers
+from pandas import DataFrame
+from typing import Tuple, List
 
 
 def run_taiga(infile: str,
-              outdir: str,
               email: str,
               gb_mode: int = 0,
               tid: bool = False,
               correction: bool = False,
               retries: int = 5,
-              silent: bool = False) -> None:
+              silent: bool = False) -> Tuple[DataFrame, List]:
     """ Wrapper for all of TaIGa's main functionalities
 
     Required Parameters:
     infile (str): Full path to input file
-    outdir (str): Full path to output directory, wich doesn't need to be pre-existant
     email (str): Valid user e-mail
 
     Optional Parameters:
@@ -36,10 +36,6 @@ def run_taiga(infile: str,
 
     # Ouput and input paths
     input_path = infile
-    if outdir[-1] == "/":
-        output_path = outdir
-    else:  # Adding a trailing forward slash to the output path if needed
-        output_path = outdir + "/"
 
     # Providing the email when doing requests through E-Utils is recommended
     user_email = email
@@ -93,10 +89,8 @@ def run_taiga(infile: str,
     # Calling the wrapper function to fetch for the taxonomic information for all organisms
     retrievers.retrieve_taxonomy(taxon_list, user_email, retries)
 
-    # Calling a function to handle the fetched data and convert it to a Pandas DataFrame
-    frame = data_handlers.create_df(taxon_list)
-    # Calling the last function which takes the DataFrame and creates the output files
-    data_handlers.create_output(output_path, frame, taxon_list)
-
     log.info(
-        "\n> TaIGa was run successfully! You can check the results inside the output folder\n")
+        "\n> Successfuly created taxa metadata Dataframe. You can manipulate or save it!\n")
+
+    # Calling a function to handle the fetched data and convert it to a Pandas DataFrame
+    return data_handlers.create_df(taxon_list), taxon_list
