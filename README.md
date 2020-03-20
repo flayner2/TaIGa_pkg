@@ -9,9 +9,9 @@ For better information, see the repo for the original [TaIGa](https://github.com
 From a Python script of your choice (must be `>=Python 3.6`), do:
 
 ```python
-import taiga
+from taiga.core import taxonomy
 
-taiga.run_taiga(input_file, output_directory, email)
+taxonomy.run_taiga(input_file, output_directory, email)
 
 ```
 
@@ -47,10 +47,6 @@ sending requests to Entrez. This is all TaIGa will use the e-mail for. You may p
 you not to. TaIGa will run fine anyways, as long as you provide something to this argument field.
 
 ### 2.2 Optional Arguments:
-
-```shell
-$ python3.6 -m taiga [input file] [output path] [user e-mail] --[optional arguments]
-```
 
 **gb_mode [0, 1, 2, 3]**: *Default: 0*. This changes TaIGa's default input type to instead expect a Genbank format file. This 
 argument exepects one numeric option from the available ones. Those are:
@@ -102,7 +98,7 @@ TaIGa's `run_taiga()` function calls a bunch of other functions from `helpers`, 
 `data_handlers` and uses the **Taxon** object from `data_models`. You could import those modules with something like:
 
 ```python
-from taiga import fetchers, data_models
+from taiga.common import fetchers, data_models
 
 animal = data_models.Taxon()
 fetchers.fetch_taxonomic_info(email, animal, retries)
