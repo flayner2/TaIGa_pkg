@@ -12,22 +12,25 @@ From a Python script of your choice (must be `>=Python 3.6`), do:
 from taiga.core import taxonomy
 from taiga.common import data_handlers
 
-frame, taxon_list = taxonomy.run_taiga(input_file, output_directory, email)
-data_handlers.create_output(ouput_directory, frame, taxon_list)
+taxon_list = taxonomy.run_taiga(input_file, email)
+df = data_handlers.create_df(taxon_list)
+data_handlers.create_output(ouput_directory, df, taxon_list)
 
 ```
 
-This will run TaIGa's main function, which grabs a list of names from `input_file`, fetches for their taxonomic
-information on [NCBI's Taxonomy](https://www.ncbi.nlm.nih.gov/taxonomy), which needs your `email` as a good practice,
-and returns a DataFrame and a list of Taxon objects. Then, it outputs the results to the specified `output_directory`,
-which need not to be pre-created, using the returned DataFrame and list.
+This will run TaIGa's main function, which grabs a list of names from `input_file`, fetches for 
+their taxonomic information on [NCBI's Taxonomy](https://www.ncbi.nlm.nih.gov/taxonomy), which 
+needs your `email` as a good practice, and returns a list of Taxon objects. It then calls the 
+`create_df` function, which receives the list of Taxon objects and returns a DataFrame. Then, it 
+calls the `create_output` function, which outputs the results to the specified `output_directory`, 
+which need not to be pre-created, using the DataFrame and the Taxon list. It needs the Taxon list
+to be able to create a file that lists Taxon objects missing critical information.
 
 ## 2 Arguments
 
 ```python
 
-run_taiga(infile, outdir, email, gb_mode=0, tid=False, correction=False, retries=5, silent=False) -> Tuple[DataFrame, 
-                                                                                                           List]
+run_taiga(infile, email, gb_mode=0, tid=False, correction=False, retries=5, silent=False) -> List[Taxon]
 
 ```
 
@@ -71,19 +74,23 @@ the current working directory. This log file will contain all information about 
 
 ## 3 Output files
 
-To create the output files, run the following:
+To create the output files, you'll need to run the `create_output` function from the `taiga.common.data_handlers` module.
+It expects an `output_folder`, a `df` and a `taxon_list` as arguments. To create those and output your results, run:
 
 ```python
-from taiga.core import data_handlers
+from taiga.core import taxonomy
+from taiga.common import data_handlers
 
-data_handlers.create_output(ouput_directory, frame, taxon_list)
+taxon_list = taxonomy.run_taiga(input_file, email)
+df = data_handlers.create_df(taxon_list)
+data_handlers.create_output(ouput_directory, df, taxon_list)
 
 ```
 
 The arguments are:
 
 - **[output directory]**: a string containing the path to the output directory, which doesn't need to be created yet.
-- **[frame]**: the DataFrame returned by `taiga.core.taxonomy.run_taiga()`.
+- **[df]**: the DataFrame returned by `taiga.core.taxonomy.run_taiga()`.
 - **[taxon_list]**: the list of Taxon objects returned by `taiga.core.taxonomy.run_taiga()`.
 
 ### 3.1 TaIGa_result.csv
@@ -120,7 +127,7 @@ fetchers.fetch_taxonomic_info(email, animal, retries)
 ```
 
 All modules and functions are nicely documented and you can check their docstrings to see what they do exactly and how
-they do it. I won't extend further onto them simply because, as of now, they're not really meant to be executed alone.
+they do it. I won't extend further on them simply because, as of now, they're not really meant to be executed alone.
 They will probably work well and do their job if you execute them properly, but individually those are rather simple
 wrappers over some common [Biopython](https://biopython.org/) functionalities.
 

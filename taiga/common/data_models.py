@@ -5,7 +5,7 @@ from typing import Dict, List, Set
 
 
 class Taxon:
-    def __init__(self, name: str = None, genome_id: int = None, taxon_id: int = None, classification: Dict = dict(),
+    def __init__(self, name: str = None, genome_id: int = None, taxon_id: int = None, classification: Dict = None,
                  missing_name: bool = False, missing_taxon_id: bool = False, missing_corrected: bool = False,
                  missing_classification: bool = False) -> None:
         self.name = name
@@ -28,7 +28,10 @@ class Taxon:
 
         """
 
-        return list(self.classification.values())
+        if self.classification is not None:
+            return list(self.classification.values())
+        else:
+            return []
 
     def list_ranks(self) -> Set:
         """Returns a set with all the ranks for an organism
@@ -41,4 +44,7 @@ class Taxon:
 
         """
 
-        return set(self.classification)
+        if self.classification is not None:
+            return set(self.classification)
+        else:
+            return set()

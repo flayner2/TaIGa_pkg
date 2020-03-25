@@ -1,8 +1,8 @@
 import sys
 import logging as log
 from ..common import parsers, helpers, retrievers, data_handlers
-from pandas import DataFrame
-from typing import Tuple, List
+from ..common.data_models import Taxon
+from typing import List
 
 
 def run_taiga(infile: str,
@@ -11,7 +11,7 @@ def run_taiga(infile: str,
               tid: bool = False,
               correction: bool = False,
               retries: int = 5,
-              silent: bool = False) -> Tuple[DataFrame, List]:
+              silent: bool = False) -> List[Taxon]:
     """ Wrapper for all of TaIGa's main functionalities
 
     Required Parameters:
@@ -50,7 +50,7 @@ def run_taiga(infile: str,
     mode = gb_mode
 
     # A list to hold Taxon objects
-    taxon_list = []
+    taxon_list: List[Taxon] = []
 
     # Inital configuration for the logging module
     # At this point, the output may be set to verbose or not
@@ -93,4 +93,4 @@ def run_taiga(infile: str,
         "\n> Successfuly created taxa metadata Dataframe. You can manipulate or save it!\n")
 
     # Calling a function to handle the fetched data and convert it to a Pandas DataFrame
-    return data_handlers.create_df(taxon_list), taxon_list
+    return taxon_list
