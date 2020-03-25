@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="taiga-bio",
-    version="1.0.3",
+    version="1.0.4",
     author="Maycon Oliveira",
     author_email="flayner5@gmail.com",
     description="Set of tools to fetch taxonomic metadata for a list of organisms",
